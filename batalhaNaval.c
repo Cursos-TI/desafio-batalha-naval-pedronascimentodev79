@@ -49,6 +49,24 @@ int podePosicionarVertical(int tabuleiro[TAM_TABULEIRO][TAM_TABULEIRO], int linh
     return 1;
 }
 
+// Validação para posicionar navio na diagonal principal (↘)
+int podePosicionarDiagonalPrincipal(int tabuleiro[TAM_TABULEIRO][TAM_TABULEIRO], int linha, int coluna) {
+    if (linha + TAM_NAVIO > TAM_TABULEIRO || coluna + TAM_NAVIO > TAM_TABULEIRO) return 0;
+    for (int i = 0; i < TAM_NAVIO; i++) {
+        if (tabuleiro[linha + i][coluna + i] == NAVIO) return 0;
+    }
+    return 1;
+}
+
+// Validação para posicionar navio na diagonal secundária (↙)
+int podePosicionarDiagonalSecundaria(int tabuleiro[TAM_TABULEIRO][TAM_TABULEIRO], int linha, int coluna) {
+    if (linha + TAM_NAVIO > TAM_TABULEIRO || coluna - TAM_NAVIO + 1 < 0) return 0;
+    for (int i = 0; i < TAM_NAVIO; i++) {
+        if (tabuleiro[linha + i][coluna - i] == NAVIO) return 0;
+    }
+    return 1;
+}
+
 // Função para posicionar navio horizontal
 void posicionarNavioHorizontal(int tabuleiro[TAM_TABULEIRO][TAM_TABULEIRO], int linha, int coluna) {
     for (int i = 0; i < TAM_NAVIO; i++) {
@@ -63,31 +81,60 @@ void posicionarNavioVertical(int tabuleiro[TAM_TABULEIRO][TAM_TABULEIRO], int li
     }
 }
 
+// Posicionamento na diagonal principal (↘)
+void posicionarNavioDiagonalPrincipal(int tabuleiro[TAM_TABULEIRO][TAM_TABULEIRO], int linha, int coluna) {
+    for (int i = 0; i < TAM_NAVIO; i++) {
+        tabuleiro[linha + i][coluna + i] = NAVIO;
+    }
+}
+
+// Posicionamento na diagonal secundária (↙)
+void posicionarNavioDiagonalSecundaria(int tabuleiro[TAM_TABULEIRO][TAM_TABULEIRO], int linha, int coluna) {
+    for (int i = 0; i < TAM_NAVIO; i++) {
+        tabuleiro[linha + i][coluna - i] = NAVIO;
+    }
+}
+
 int main() {
     int tabuleiro[TAM_TABULEIRO][TAM_TABULEIRO];
     
-    // Inicializa tabuleiro com água
+    // Inicializa o tabuleiro com água
     inicializarTabuleiro(tabuleiro);
 
-    // Coordenadas pré-definidas para os navios
-    int linhaNavioH = 2, colunaNavioH = 4; // Navio horizontal
-    int linhaNavioV = 5, colunaNavioV = 1; // Navio vertical
-
-    // Verifica e posiciona navio horizontal
-    if (podePosicionarHorizontal(tabuleiro, linhaNavioH, colunaNavioH)) {
-        posicionarNavioHorizontal(tabuleiro, linhaNavioH, colunaNavioH);
+    // NAVIO HORIZONTAL
+    int linhaH = 2, colunaH = 4;
+    if (podePosicionarHorizontal(tabuleiro, linhaH, colunaH)) {
+        posicionarNavioHorizontal(tabuleiro, linhaH, colunaH);
     } else {
-        printf("Não foi possível posicionar o navio horizontal nas coordenadas (%d,%d).\n", linhaNavioH, colunaNavioH);
+        printf("Erro ao posicionar navio horizontal em (%d,%d)\n", linhaH, colunaH);
     }
 
-    // Verifica e posiciona navio vertical
-    if (podePosicionarVertical(tabuleiro, linhaNavioV, colunaNavioV)) {
-        posicionarNavioVertical(tabuleiro, linhaNavioV, colunaNavioV);
+    // NAVIO VERTICAL
+    int linhaV = 5, colunaV = 1;
+    if (podePosicionarVertical(tabuleiro, linhaV, colunaV)) {
+        posicionarNavioVertical(tabuleiro, linhaV, colunaV);
     } else {
-        printf("Não foi possível posicionar o navio vertical nas coordenadas (%d,%d).\n", linhaNavioV, colunaNavioV);
+        printf("Erro ao posicionar navio vertical em (%d,%d)\n", linhaV, colunaV);
+    }
+
+    // NAVIO DIAGONAL PRINCIPAL (↘)
+    int linhaDP = 0, colunaDP = 0;
+    if (podePosicionarDiagonalPrincipal(tabuleiro, linhaDP, colunaDP)) {
+        posicionarNavioDiagonalPrincipal(tabuleiro, linhaDP, colunaDP);
+    } else {
+        printf("Erro ao posicionar navio diagonal principal em (%d,%d)\n", linhaDP, colunaDP);
+    }
+
+    // NAVIO DIAGONAL SECUNDÁRIA (↙)
+    int linhaDS = 0, colunaDS = 9;
+    if (podePosicionarDiagonalSecundaria(tabuleiro, linhaDS, colunaDS)) {
+        posicionarNavioDiagonalSecundaria(tabuleiro, linhaDS, colunaDS);
+    } else {
+        printf("Erro ao posicionar navio diagonal secundária em (%d,%d)\n", linhaDS, colunaDS);
     }
 
     // Exibe o tabuleiro final
+    printf("\n=== TABULEIRO FINAL ===\n");
     exibirTabuleiro(tabuleiro);
 
     return 0;
